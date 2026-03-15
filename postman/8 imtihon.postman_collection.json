@@ -1,0 +1,1412 @@
+{
+  "info": {
+    "_postman_id": "8e35007d-2124-4a03-9b5e-b83c2fabb00b",
+    "name": "8 imtihon",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51144561",
+    "_collection_link": "https://go.postman.co/collection/51144561-8e35007d-2124-4a03-9b5e-b83c2fabb00b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "accounts app",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"client3\",\r\n    \"role\": \"client\",\r\n    \"email\": \"client3@gamil.com\",\r\n    \"phone_number\": \"\",\r\n    \"preferred_contact_method\": \"email\",\r\n    \"password\": \"client12345+\",\r\n    \"confirm_password\": \"client12345+\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/signup/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "signup",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify signup code",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user_id\": 3,\r\n    \"code\": \"428272\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/verify-signup-code/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "verify-signup-code",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/login/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "login",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/logout/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "logout",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Current user profile",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 3,\r\n    \"username\": \"client3\",\r\n    \"email\": \"client3@example.com\",\r\n    \"phone_number\": null,\r\n    \"role\": \"client\",\r\n    \"bio\": \"\",\r\n    \"image\": null,\r\n    \"preferred_contact_method\": \"email\",\r\n    \"is_email_verified\": true,\r\n    \"is_phone_verified\": false,\r\n    \"created_at\": \"2026-03-15T12:00:00Z\",\r\n    \"updated_at\": \"2026-03-15T12:01:00Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/me/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "me",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update current user profile",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"bio\": \"Backend developer with DRF experience\",\r\n    \"preferred_contact_method\": \"email\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/me/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "me",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Freelancer public profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/freelancers/2/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "freelancers",
+                "2",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Password reset request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client1\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/password/reset/request/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "password",
+                "reset",
+                "request",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Password reset confirm",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"user_id\": 1,\r\n    \"code\": \"123456\",\r\n    \"new_password\": \"newclient12345\",\r\n    \"confirm_password\": \"newclient12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/password/reset/confirm/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "password",
+                "reset",
+                "confirm",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"old_password\": \"client12345\",\r\n    \"new_password\": \"client123456\",\r\n    \"confirm_password\": \"client123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/accounts/password/change/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "accounts",
+                "password",
+                "change",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "JWT token obtain",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"client1\",\r\n    \"password\": \"client12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/token/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "token",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "JWT token refresh",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"refresh\": \"REFRESH_TOKEN\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/token/refresh/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "token",
+                "refresh",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "JWT token verify",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"ACCESS_TOKEN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/token/verify/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "token",
+                "verify",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "List projects",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/projects/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "projects",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create project",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Build Django API\",\r\n    \"description\": \"Need backend developer with DRF experience for marketplace API.\",\r\n    \"budget\": \"1000.00\",\r\n    \"deadline\": \"2026-05-01\",\r\n    \"skills_required\": \"django, drf, postgresql\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/projects/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "projects",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Project detail",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/projects/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "projects",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bids",
+      "item": [
+        {
+          "name": "List bids",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/bids/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "bids",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create bid",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"project_id\": 1,\r\n    \"proposal\": \"I can do this project and deliver a complete DRF backend within 7 days.\",\r\n    \"price\": \"900.00\",\r\n    \"delivery_time_days\": 7\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/bids/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "bids",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bid detail",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/bids/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "bids",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Project bids for owner client",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/bids/project/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "bids",
+                "project",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept bid",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/bids/1/accept/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "bids",
+                "1",
+                "accept",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contracts",
+      "item": [
+        {
+          "name": "List contracts",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/contracts/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "contracts",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Contract detail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/contracts/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "contracts",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Finish contract",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/contracts/1/finish/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "contracts",
+                "1",
+                "finish",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "List reviews",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/reviews/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "reviews",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create review",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"contract_id\": 1,\r\n    \"rating\": 5,\r\n    \"comment\": \"Great freelancer, delivered on time.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/reviews/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "reviews",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Review detail",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/reviews/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "reviews",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "List conversations",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/chat/conversations/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "chat",
+                "conversations",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Conversation detail",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/chat/conversations/1/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "chat",
+                "conversations",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List messages",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/chat/conversations/1/messages/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "chat",
+                "conversations",
+                "1",
+                "messages",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send message",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"text\": \"Hello, let's start the project.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/chat/conversations/1/messages/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "chat",
+                "conversations",
+                "1",
+                "messages",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Documentation",
+      "item": [
+        {
+          "name": "Swagger UI",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/docs/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "docs",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "OpenAPI schema",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzczNTczODE4LCJpYXQiOjE3NzM1NzM1MTgsImp0aSI6ImEyYjc1NGIwMGNkNDQyN2Y5MGFkNTExYmM0YWNhOTlhIiwidXNlcl9pZCI6M30.CaTLg2amY4d3CLDib6a1au7DV4qJTx7gJ_83J6F4HY8",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identifier\": \"client3\",\r\n    \"password\": \"client12345+\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/schema/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "schema",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1273 @@
+How to test API
+================
+
+1. Сначала создать пользователей:
+   - client
+   - freelancer
+2. Подтвердить регистрацию через verification code.
+3. Затем получить JWT token.
+4. Для защищённых endpoints добавить заголовок:
+
+Authorization: Bearer ACCESS_TOKEN
+
+5. Базовый адрес для локального тестирования:
+
+http://127.0.0.1:8000
+
+6. Рекомендуемая последовательность тестирования:
+   - Register client
+   - Verify signup code
+   - Login client
+   - Register freelancer
+   - Verify signup code
+   - Login freelancer
+   - Client creates project
+   - Freelancer creates bid
+   - Client views project bids
+   - Client accepts bid
+   - Client/Freelancer view contracts
+   - Client finishes contract
+   - Client creates review
+   - Client/Freelancer test chat
+
+7. Важно:
+   - endpoints `/api/accounts/*`, `/api/projects/*`, `/api/bids/*`, `/api/contracts/*`, `/api/reviews/*`, `/api/chat/*`
+     в основном требуют JWT, кроме signup/login/password reset/token endpoints.
+   - Swagger UI: `/api/docs/`
+   - OpenAPI schema: `/api/schema/`
+
+
+Authentication
+================
+
+Register
+--------------------
+Method: POST
+URL: /api/accounts/signup/
+JWT required: No
+
+Body:
+{
+    "username": "client1",
+    "role": "client",
+    "email": "client1@example.com",
+    "phone_number": "",
+    "preferred_contact_method": "email",
+    "password": "client12345",
+    "confirm_password": "client12345"
+}
+
+Response example:
+{
+    "message": "Verification code was sent successfully.",
+    "pending_user_id": 1,
+    "user": {
+        "id": 1,
+        "username": "client1",
+        "email": "client1@example.com",
+        "phone_number": null,
+        "role": "client",
+        "bio": "",
+        "image": null,
+        "preferred_contact_method": "email",
+        "is_email_verified": false,
+        "is_phone_verified": false,
+        "created_at": "2026-03-15T12:00:00Z",
+        "updated_at": "2026-03-15T12:00:00Z"
+    }
+}
+
+Comment:
+- Сохрани `pending_user_id` для следующего шага.
+
+
+Verify signup code
+--------------------
+Method: POST
+URL: /api/accounts/verify-signup-code/
+JWT required: No
+
+Body:
+{
+    "user_id": 1,
+    "code": "123456"
+}
+
+Response example:
+{
+    "message": "Account verified successfully.",
+    "tokens": {
+        "refresh": "REFRESH_TOKEN",
+        "access": "ACCESS_TOKEN"
+    },
+    "user": {
+        "id": 1,
+        "username": "client1",
+        "email": "client1@example.com",
+        "phone_number": null,
+        "role": "client",
+        "bio": "",
+        "image": null,
+        "preferred_contact_method": "email",
+        "is_email_verified": true,
+        "is_phone_verified": false,
+        "created_at": "2026-03-15T12:00:00Z",
+        "updated_at": "2026-03-15T12:01:00Z"
+    }
+}
+
+Comment:
+- Код берётся из email delivery или из dev-логов/базы.
+- После этого можно использовать `tokens.access`.
+
+
+Login
+--------------------
+Method: POST
+URL: /api/accounts/login/
+JWT required: No
+
+Body:
+{
+    "identifier": "client1",
+    "password": "client12345"
+}
+
+Response example:
+{
+    "tokens": {
+        "refresh": "REFRESH_TOKEN",
+        "access": "ACCESS_TOKEN"
+    },
+    "user": {
+        "id": 1,
+        "username": "client1",
+        "email": "client1@example.com",
+        "phone_number": null,
+        "role": "client",
+        "bio": "",
+        "image": null,
+        "preferred_contact_method": "email",
+        "is_email_verified": true,
+        "is_phone_verified": false,
+        "created_at": "2026-03-15T12:00:00Z",
+        "updated_at": "2026-03-15T12:01:00Z"
+    }
+}
+
+Comment:
+- `identifier` может быть `username`, `email` или `phone_number`.
+
+
+Logout
+--------------------
+Method: POST
+URL: /api/accounts/logout/
+JWT required: Yes
+
+Body:
+{}
+
+Response example:
+Status: 204 No Content
+
+Comment:
+- Текущая реализация просто возвращает 204.
+
+
+Current user profile
+--------------------
+Method: GET
+URL: /api/accounts/me/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "id": 1,
+    "username": "client1",
+    "email": "client1@example.com",
+    "phone_number": null,
+    "role": "client",
+    "bio": "",
+    "image": null,
+    "preferred_contact_method": "email",
+    "is_email_verified": true,
+    "is_phone_verified": false,
+    "created_at": "2026-03-15T12:00:00Z",
+    "updated_at": "2026-03-15T12:01:00Z"
+}
+
+Comment:
+- Для freelancer ответ дополнительно содержит `freelancer_stats`.
+
+
+Update current user profile
+--------------------
+Method: PATCH
+URL: /api/accounts/me/
+JWT required: Yes
+
+Body:
+{
+    "bio": "Backend developer with DRF experience",
+    "preferred_contact_method": "email"
+}
+
+Response example:
+{
+    "id": 1,
+    "username": "client1",
+    "email": "client1@example.com",
+    "phone_number": null,
+    "role": "client",
+    "bio": "Backend developer with DRF experience",
+    "image": null,
+    "preferred_contact_method": "email",
+    "is_email_verified": true,
+    "is_phone_verified": false,
+    "created_at": "2026-03-15T12:00:00Z",
+    "updated_at": "2026-03-15T12:10:00Z"
+}
+
+
+Freelancer public profile
+--------------------
+Method: GET
+URL: /api/accounts/freelancers/2/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "id": 2,
+    "username": "freelancer1",
+    "role": "freelancer",
+    "bio": "Python and Django developer",
+    "image": null,
+    "created_at": "2026-03-15T12:00:00Z",
+    "updated_at": "2026-03-15T12:00:00Z",
+    "freelancer_stats": {
+        "average_rating": 5.0,
+        "review_count": 3,
+        "completed_orders": 3
+    }
+}
+
+
+Password reset request
+--------------------
+Method: POST
+URL: /api/accounts/password/reset/request/
+JWT required: No
+
+Body:
+{
+    "identifier": "client1"
+}
+
+Response example:
+{
+    "message": "Password reset code was sent.",
+    "reset_user_id": 1
+}
+
+
+Password reset confirm
+--------------------
+Method: POST
+URL: /api/accounts/password/reset/confirm/
+JWT required: No
+
+Body:
+{
+    "user_id": 1,
+    "code": "123456",
+    "new_password": "newclient12345",
+    "confirm_password": "newclient12345"
+}
+
+Response example:
+{
+    "message": "Password was reset successfully."
+}
+
+
+Change password
+--------------------
+Method: POST
+URL: /api/accounts/password/change/
+JWT required: Yes
+
+Body:
+{
+    "old_password": "client12345",
+    "new_password": "client123456",
+    "confirm_password": "client123456"
+}
+
+Response example:
+{
+    "message": "Password changed successfully."
+}
+
+
+JWT token obtain
+--------------------
+Method: POST
+URL: /api/token/
+JWT required: No
+
+Body:
+{
+    "username": "client1",
+    "password": "client12345"
+}
+
+Response example:
+{
+    "refresh": "REFRESH_TOKEN",
+    "access": "ACCESS_TOKEN"
+}
+
+
+JWT token refresh
+--------------------
+Method: POST
+URL: /api/token/refresh/
+JWT required: No
+
+Body:
+{
+    "refresh": "REFRESH_TOKEN"
+}
+
+Response example:
+{
+    "access": "NEW_ACCESS_TOKEN"
+}
+
+
+JWT token verify
+--------------------
+Method: POST
+URL: /api/token/verify/
+JWT required: No
+
+Body:
+{
+    "token": "ACCESS_TOKEN"
+}
+
+Response example:
+{}
+
+
+Projects
+================
+
+List projects
+--------------------
+Method: GET
+URL: /api/projects/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "client": {
+                "id": 1,
+                "username": "client1",
+                "email": "client1@example.com",
+                "phone_number": null,
+                "role": "client",
+                "bio": "",
+                "image": null,
+                "preferred_contact_method": "email",
+                "is_email_verified": true,
+                "is_phone_verified": false,
+                "created_at": "2026-03-15T12:00:00Z",
+                "updated_at": "2026-03-15T12:00:00Z"
+            },
+            "title": "Build Django API",
+            "description": "Need backend developer with DRF experience for marketplace API.",
+            "budget": "1000.00",
+            "deadline": "2026-05-01",
+            "status": "open",
+            "skills_required": "django, drf, postgresql",
+            "is_active": true,
+            "created_at": "2026-03-15T12:20:00Z",
+            "updated_at": "2026-03-15T12:20:00Z"
+        }
+    ]
+}
+
+Comment:
+- Для freelancer показываются только `open` и `is_active=true` проекты.
+- Для client показываются только его собственные проекты.
+- Поддерживаются query params:
+  - `search`
+  - `status`
+  - `min_budget`
+  - `max_budget`
+  - `ordering`
+  - `page`
+  - `page_size`
+
+
+Create project
+--------------------
+Method: POST
+URL: /api/projects/
+JWT required: Yes
+
+Body:
+{
+    "title": "Build Django API",
+    "description": "Need backend developer with DRF experience for marketplace API.",
+    "budget": "1000.00",
+    "deadline": "2026-05-01",
+    "skills_required": "django, drf, postgresql"
+}
+
+Response example:
+{
+    "id": 1,
+    "client": {
+        "id": 1,
+        "username": "client1",
+        "email": "client1@example.com",
+        "phone_number": null,
+        "role": "client",
+        "bio": "",
+        "image": null,
+        "preferred_contact_method": "email",
+        "is_email_verified": true,
+        "is_phone_verified": false,
+        "created_at": "2026-03-15T12:00:00Z",
+        "updated_at": "2026-03-15T12:00:00Z"
+    },
+    "title": "Build Django API",
+    "description": "Need backend developer with DRF experience for marketplace API.",
+    "budget": "1000.00",
+    "deadline": "2026-05-01",
+    "status": "open",
+    "skills_required": "django, drf, postgresql",
+    "is_active": true,
+    "created_at": "2026-03-15T12:20:00Z",
+    "updated_at": "2026-03-15T12:20:00Z"
+}
+
+Comment:
+- Создавать project может только user с ролью `client`.
+
+
+Project detail
+--------------------
+Method: GET
+URL: /api/projects/1/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "id": 1,
+    "client": {
+        "id": 1,
+        "username": "client1",
+        "email": "client1@example.com",
+        "phone_number": null,
+        "role": "client",
+        "bio": "",
+        "image": null,
+        "preferred_contact_method": "email",
+        "is_email_verified": true,
+        "is_phone_verified": false,
+        "created_at": "2026-03-15T12:00:00Z",
+        "updated_at": "2026-03-15T12:00:00Z"
+    },
+    "title": "Build Django API",
+    "description": "Need backend developer with DRF experience for marketplace API.",
+    "budget": "1000.00",
+    "deadline": "2026-05-01",
+    "status": "open",
+    "skills_required": "django, drf, postgresql",
+    "is_active": true,
+    "created_at": "2026-03-15T12:20:00Z",
+    "updated_at": "2026-03-15T12:20:00Z"
+}
+
+
+Bids
+================
+
+List bids
+--------------------
+Method: GET
+URL: /api/bids/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "project": {
+                "id": 1,
+                "client": {
+                    "id": 1,
+                    "username": "client1",
+                    "email": "client1@example.com",
+                    "phone_number": null,
+                    "role": "client",
+                    "bio": "",
+                    "image": null,
+                    "preferred_contact_method": "email",
+                    "is_email_verified": true,
+                    "is_phone_verified": false,
+                    "created_at": "2026-03-15T12:00:00Z",
+                    "updated_at": "2026-03-15T12:00:00Z"
+                },
+                "title": "Build Django API",
+                "description": "Need backend developer with DRF experience for marketplace API.",
+                "budget": "1000.00",
+                "deadline": "2026-05-01",
+                "status": "open",
+                "skills_required": "django, drf, postgresql",
+                "is_active": true,
+                "created_at": "2026-03-15T12:20:00Z",
+                "updated_at": "2026-03-15T12:20:00Z"
+            },
+            "freelancer": {
+                "id": 2,
+                "username": "freelancer1",
+                "email": "freelancer1@example.com",
+                "phone_number": null,
+                "role": "freelancer",
+                "bio": "",
+                "image": null,
+                "preferred_contact_method": "email",
+                "is_email_verified": true,
+                "is_phone_verified": false,
+                "created_at": "2026-03-15T12:05:00Z",
+                "updated_at": "2026-03-15T12:05:00Z"
+            },
+            "proposal": "I can do this project and deliver a complete DRF backend within 7 days.",
+            "price": "900.00",
+            "delivery_time_days": 7,
+            "status": "pending",
+            "created_at": "2026-03-15T12:30:00Z",
+            "updated_at": "2026-03-15T12:30:00Z"
+        }
+    ]
+}
+
+Comment:
+- Freelancer видит свои bids.
+- Client видит bids на свои проекты.
+
+
+Create bid
+--------------------
+Method: POST
+URL: /api/bids/
+JWT required: Yes
+
+Body:
+{
+    "project_id": 1,
+    "proposal": "I can do this project and deliver a complete DRF backend within 7 days.",
+    "price": "900.00",
+    "delivery_time_days": 7
+}
+
+Response example:
+{
+    "id": 1,
+    "project": {
+        "id": 1,
+        "client": {
+            "id": 1,
+            "username": "client1",
+            "email": "client1@example.com",
+            "phone_number": null,
+            "role": "client",
+            "bio": "",
+            "image": null,
+            "preferred_contact_method": "email",
+            "is_email_verified": true,
+            "is_phone_verified": false,
+            "created_at": "2026-03-15T12:00:00Z",
+            "updated_at": "2026-03-15T12:00:00Z"
+        },
+        "title": "Build Django API",
+        "description": "Need backend developer with DRF experience for marketplace API.",
+        "budget": "1000.00",
+        "deadline": "2026-05-01",
+        "status": "open",
+        "skills_required": "django, drf, postgresql",
+        "is_active": true,
+        "created_at": "2026-03-15T12:20:00Z",
+        "updated_at": "2026-03-15T12:20:00Z"
+    },
+    "freelancer": {
+        "id": 2,
+        "username": "freelancer1",
+        "email": "freelancer1@example.com",
+        "phone_number": null,
+        "role": "freelancer",
+        "bio": "",
+        "image": null,
+        "preferred_contact_method": "email",
+        "is_email_verified": true,
+        "is_phone_verified": false,
+        "created_at": "2026-03-15T12:05:00Z",
+        "updated_at": "2026-03-15T12:05:00Z"
+    },
+    "proposal": "I can do this project and deliver a complete DRF backend within 7 days.",
+    "price": "900.00",
+    "delivery_time_days": 7,
+    "status": "pending",
+    "created_at": "2026-03-15T12:30:00Z",
+    "updated_at": "2026-03-15T12:30:00Z"
+}
+
+Comment:
+- Создавать bid может только `freelancer`.
+- Один freelancer не может отправить два bids на один project.
+
+
+Bid detail
+--------------------
+Method: GET
+URL: /api/bids/1/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "id": 1,
+    "project": {
+        "id": 1,
+        "client": {
+            "id": 1,
+            "username": "client1",
+            "email": "client1@example.com",
+            "phone_number": null,
+            "role": "client",
+            "bio": "",
+            "image": null,
+            "preferred_contact_method": "email",
+            "is_email_verified": true,
+            "is_phone_verified": false,
+            "created_at": "2026-03-15T12:00:00Z",
+            "updated_at": "2026-03-15T12:00:00Z"
+        },
+        "title": "Build Django API",
+        "description": "Need backend developer with DRF experience for marketplace API.",
+        "budget": "1000.00",
+        "deadline": "2026-05-01",
+        "status": "open",
+        "skills_required": "django, drf, postgresql",
+        "is_active": true,
+        "created_at": "2026-03-15T12:20:00Z",
+        "updated_at": "2026-03-15T12:20:00Z"
+    },
+    "freelancer": {
+        "id": 2,
+        "username": "freelancer1",
+        "email": "freelancer1@example.com",
+        "phone_number": null,
+        "role": "freelancer",
+        "bio": "",
+        "image": null,
+        "preferred_contact_method": "email",
+        "is_email_verified": true,
+        "is_phone_verified": false,
+        "created_at": "2026-03-15T12:05:00Z",
+        "updated_at": "2026-03-15T12:05:00Z"
+    },
+    "proposal": "I can do this project and deliver a complete DRF backend within 7 days.",
+    "price": "900.00",
+    "delivery_time_days": 7,
+    "status": "pending",
+    "created_at": "2026-03-15T12:30:00Z",
+    "updated_at": "2026-03-15T12:30:00Z"
+}
+
+
+Project bids for owner client
+--------------------
+Method: GET
+URL: /api/bids/project/1/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "project": {
+                "id": 1,
+                "client": {
+                    "id": 1,
+                    "username": "client1",
+                    "email": "client1@example.com",
+                    "phone_number": null,
+                    "role": "client",
+                    "bio": "",
+                    "image": null,
+                    "preferred_contact_method": "email",
+                    "is_email_verified": true,
+                    "is_phone_verified": false,
+                    "created_at": "2026-03-15T12:00:00Z",
+                    "updated_at": "2026-03-15T12:00:00Z"
+                },
+                "title": "Build Django API",
+                "description": "Need backend developer with DRF experience for marketplace API.",
+                "budget": "1000.00",
+                "deadline": "2026-05-01",
+                "status": "open",
+                "skills_required": "django, drf, postgresql",
+                "is_active": true,
+                "created_at": "2026-03-15T12:20:00Z",
+                "updated_at": "2026-03-15T12:20:00Z"
+            },
+            "freelancer": {
+                "id": 2,
+                "username": "freelancer1",
+                "email": "freelancer1@example.com",
+                "phone_number": null,
+                "role": "freelancer",
+                "bio": "",
+                "image": null,
+                "preferred_contact_method": "email",
+                "is_email_verified": true,
+                "is_phone_verified": false,
+                "created_at": "2026-03-15T12:05:00Z",
+                "updated_at": "2026-03-15T12:05:00Z"
+            },
+            "proposal": "I can do this project and deliver a complete DRF backend within 7 days.",
+            "price": "900.00",
+            "delivery_time_days": 7,
+            "status": "pending",
+            "created_at": "2026-03-15T12:30:00Z",
+            "updated_at": "2026-03-15T12:30:00Z"
+        }
+    ]
+}
+
+
+Accept bid
+--------------------
+Method: POST
+URL: /api/bids/1/accept/
+JWT required: Yes
+
+Body:
+{}
+
+Response example:
+{
+    "id": 1,
+    "project": {
+        "id": 1,
+        "client": {
+            "id": 1,
+            "username": "client1",
+            "email": "client1@example.com",
+            "phone_number": null,
+            "role": "client",
+            "bio": "",
+            "image": null,
+            "preferred_contact_method": "email",
+            "is_email_verified": true,
+            "is_phone_verified": false,
+            "created_at": "2026-03-15T12:00:00Z",
+            "updated_at": "2026-03-15T12:00:00Z"
+        },
+        "title": "Build Django API",
+        "description": "Need backend developer with DRF experience for marketplace API.",
+        "budget": "1000.00",
+        "deadline": "2026-05-01",
+        "status": "in_progress",
+        "skills_required": "django, drf, postgresql",
+        "is_active": true,
+        "created_at": "2026-03-15T12:20:00Z",
+        "updated_at": "2026-03-15T12:35:00Z"
+    },
+    "freelancer": {
+        "id": 2,
+        "username": "freelancer1",
+        "email": "freelancer1@example.com",
+        "phone_number": null,
+        "role": "freelancer",
+        "bio": "",
+        "image": null,
+        "preferred_contact_method": "email",
+        "is_email_verified": true,
+        "is_phone_verified": false,
+        "created_at": "2026-03-15T12:05:00Z",
+        "updated_at": "2026-03-15T12:05:00Z"
+    },
+    "proposal": "I can do this project and deliver a complete DRF backend within 7 days.",
+    "price": "900.00",
+    "delivery_time_days": 7,
+    "status": "accepted",
+    "created_at": "2026-03-15T12:30:00Z",
+    "updated_at": "2026-03-15T12:35:00Z"
+}
+
+Comment:
+- Этот endpoint должен вызывать client, владелец project.
+- После принятия bid должен автоматически появиться contract.
+
+
+Contracts
+================
+
+List contracts
+--------------------
+Method: GET
+URL: /api/contracts/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "project": {
+                "...": "..."
+            },
+            "bid": {
+                "...": "..."
+            },
+            "client": {
+                "...": "..."
+            },
+            "freelancer": {
+                "...": "..."
+            },
+            "agreed_price": "900.00",
+            "status": "active",
+            "notes": "",
+            "started_at": "2026-03-15T12:35:00Z",
+            "finished_at": null,
+            "cancelled_at": null,
+            "created_at": "2026-03-15T12:35:00Z",
+            "updated_at": "2026-03-15T12:35:00Z"
+        }
+    ]
+}
+
+Comment:
+- Client видит свои contracts.
+- Freelancer видит свои contracts.
+
+
+Contract detail
+--------------------
+Method: GET
+URL: /api/contracts/1/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "id": 1,
+    "project": {
+        "...": "..."
+    },
+    "bid": {
+        "...": "..."
+    },
+    "client": {
+        "...": "..."
+    },
+    "freelancer": {
+        "...": "..."
+    },
+    "agreed_price": "900.00",
+    "status": "active",
+    "notes": "",
+    "started_at": "2026-03-15T12:35:00Z",
+    "finished_at": null,
+    "cancelled_at": null,
+    "created_at": "2026-03-15T12:35:00Z",
+    "updated_at": "2026-03-15T12:35:00Z"
+}
+
+
+Finish contract
+--------------------
+Method: POST
+URL: /api/contracts/1/finish/
+JWT required: Yes
+
+Body:
+{}
+
+Response example:
+{
+    "id": 1,
+    "project": {
+        "...": "..."
+    },
+    "bid": {
+        "...": "..."
+    },
+    "client": {
+        "...": "..."
+    },
+    "freelancer": {
+        "...": "..."
+    },
+    "agreed_price": "900.00",
+    "status": "finished",
+    "notes": "",
+    "started_at": "2026-03-15T12:35:00Z",
+    "finished_at": "2026-03-15T13:00:00Z",
+    "cancelled_at": null,
+    "created_at": "2026-03-15T12:35:00Z",
+    "updated_at": "2026-03-15T13:00:00Z"
+}
+
+Comment:
+- Завершать contract может только client-владелец.
+- После этого project должен стать `completed`.
+
+
+Reviews
+================
+
+List reviews
+--------------------
+Method: GET
+URL: /api/reviews/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "contract": {
+                "...": "..."
+            },
+            "project": {
+                "...": "..."
+            },
+            "client": {
+                "...": "..."
+            },
+            "freelancer": {
+                "...": "..."
+            },
+            "rating": 5,
+            "comment": "Great freelancer, delivered on time.",
+            "created_at": "2026-03-15T13:10:00Z",
+            "updated_at": "2026-03-15T13:10:00Z"
+        }
+    ]
+}
+
+
+Create review
+--------------------
+Method: POST
+URL: /api/reviews/
+JWT required: Yes
+
+Body:
+{
+    "contract_id": 1,
+    "rating": 5,
+    "comment": "Great freelancer, delivered on time."
+}
+
+Response example:
+{
+    "id": 1,
+    "contract": {
+        "...": "..."
+    },
+    "project": {
+        "...": "..."
+    },
+    "client": {
+        "...": "..."
+    },
+    "freelancer": {
+        "...": "..."
+    },
+    "rating": 5,
+    "comment": "Great freelancer, delivered on time.",
+    "created_at": "2026-03-15T13:10:00Z",
+    "updated_at": "2026-03-15T13:10:00Z"
+}
+
+Comment:
+- Review можно создать только для `finished` contract.
+- Review может создать только client.
+
+
+Review detail
+--------------------
+Method: GET
+URL: /api/reviews/1/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "id": 1,
+    "contract": {
+        "...": "..."
+    },
+    "project": {
+        "...": "..."
+    },
+    "client": {
+        "...": "..."
+    },
+    "freelancer": {
+        "...": "..."
+    },
+    "rating": 5,
+    "comment": "Great freelancer, delivered on time.",
+    "created_at": "2026-03-15T13:10:00Z",
+    "updated_at": "2026-03-15T13:10:00Z"
+}
+
+
+Chat
+================
+
+List conversations
+--------------------
+Method: GET
+URL: /api/chat/conversations/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "contract": {
+                "...": "..."
+            },
+            "client": {
+                "...": "..."
+            },
+            "freelancer": {
+                "...": "..."
+            },
+            "created_at": "2026-03-15T12:35:00Z",
+            "updated_at": "2026-03-15T12:40:00Z",
+            "unread_messages_count": 1
+        }
+    ]
+}
+
+
+Conversation detail
+--------------------
+Method: GET
+URL: /api/chat/conversations/1/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+{
+    "id": 1,
+    "contract": {
+        "...": "..."
+    },
+    "client": {
+        "...": "..."
+    },
+    "freelancer": {
+        "...": "..."
+    },
+    "created_at": "2026-03-15T12:35:00Z",
+    "updated_at": "2026-03-15T12:40:00Z",
+    "unread_messages_count": 0,
+    "messages": [
+        {
+            "id": 1,
+            "sender": {
+                "...": "..."
+            },
+            "text": "Hello, let's start the project.",
+            "image": null,
+            "is_read": true,
+            "created_at": "2026-03-15T12:40:00Z",
+            "updated_at": "2026-03-15T12:40:00Z"
+        }
+    ]
+}
+
+
+List messages
+--------------------
+Method: GET
+URL: /api/chat/conversations/1/messages/
+JWT required: Yes
+
+Body:
+No body
+
+Response example:
+[
+    {
+        "id": 1,
+        "sender": {
+            "id": 1,
+            "username": "client1",
+            "email": "client1@example.com",
+            "phone_number": null,
+            "role": "client",
+            "bio": "",
+            "image": null,
+            "preferred_contact_method": "email",
+            "is_email_verified": true,
+            "is_phone_verified": false,
+            "created_at": "2026-03-15T12:00:00Z",
+            "updated_at": "2026-03-15T12:00:00Z"
+        },
+        "text": "Hello, let's start the project.",
+        "image": null,
+        "is_read": true,
+        "created_at": "2026-03-15T12:40:00Z",
+        "updated_at": "2026-03-15T12:40:00Z"
+    }
+]
+
+
+Send message
+--------------------
+Method: POST
+URL: /api/chat/conversations/1/messages/
+JWT required: Yes
+
+Body:
+{
+    "text": "Hello, let's start the project."
+}
+
+Response example:
+{
+    "id": 1,
+    "sender": {
+        "id": 1,
+        "username": "client1",
+        "email": "client1@example.com",
+        "phone_number": null,
+        "role": "client",
+        "bio": "",
+        "image": null,
+        "preferred_contact_method": "email",
+        "is_email_verified": true,
+        "is_phone_verified": false,
+        "created_at": "2026-03-15T12:00:00Z",
+        "updated_at": "2026-03-15T12:00:00Z"
+    },
+    "text": "Hello, let's start the project.",
+    "image": null,
+    "is_read": false,
+    "created_at": "2026-03-15T12:40:00Z",
+    "updated_at": "2026-03-15T12:40:00Z"
+}
+
+Comment:
+- Можно отправлять `text`, `image` или оба поля.
+- Если тестируешь загрузку изображения, используй `form-data`.
+
+
+Documentation
+================
+
+Swagger UI
+--------------------
+Method: GET
+URL: /api/docs/
+JWT required: No
+
+Body:
+No body
+
+Response example:
+HTML Swagger UI page
+
+Comment:
+- Используй для визуального просмотра и ручного тестирования endpoints.
+
+
+OpenAPI schema
+--------------------
+Method: GET
+URL: /api/schema/
+JWT required: No
+
+Body:
+No body
+
+Response example:
+OpenAPI schema document
+
+Comment:
+- Можно импортировать в Postman или другие API tools.

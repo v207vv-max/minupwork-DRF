@@ -34,14 +34,14 @@ def create_verification_code(*, user, channel, purpose, target):
         code=code,
         expires_at=timezone.now() + timedelta(minutes=10),
     )
-
+    print(f'----------------------------{code}')
     if channel == VerificationChannel.EMAIL:
         send_verification_code_email(
             to_email=target,
             code=code,
             purpose=purpose,
         )
-        print(f'----------------------------{code}')
+
     else:
         # Phone delivery is intentionally not implemented for this project.
         # We keep the field and channel for architecture completeness.

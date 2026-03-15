@@ -296,6 +296,14 @@ OpenAPI schema:
 /api/schema/
 ```
 
+## Документация Postman
+
+Коллекция Postman доступна в репозитории:
+
+```text
+postman/8-imtihon.postman_collection.json
+```
+
 ## Фильтрация и поиск
 
 ### Projects
