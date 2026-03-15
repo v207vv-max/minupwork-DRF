@@ -1,273 +1,220 @@
-# Freelance Marketplace (Django Backend)
+# Freelance Marketplace API
 
-Backend часть платформы для работы между клиентами и фрилансерами, аналогичной Upwork.
+Backend API платформа для работы между клиентами и фрилансерами, аналогичная Upwork.
 
-Пользователи могут публиковать проекты, отправлять предложения (bids), заключать контракты, общаться в чате и оставлять отзывы после завершения работы.
+Проект реализован на Django Rest Framework и предоставляет REST API для управления пользователями, проектами, предложениями, контрактами, отзывами и чатом.
 
-Проект реализован на Django с разделением бизнес-логики, моделей и представлений.
+## Возможности системы
 
----
+- клиенты публикуют проекты
+- фрилансеры просматривают проекты и отправляют bids
+- клиенты выбирают исполнителя
+- при выборе bid создаётся контракт
+- клиент завершает контракт
+- после завершения можно оставить отзыв
+- между клиентом и фрилансером создаётся чат по контракту
 
-## Основной функционал
-
-### Пользователи
-
-В системе существуют два типа пользователей:
-
-- Client — создаёт проекты
-- Freelancer — отправляет предложения на проекты
-
-Возможности:
-
-- регистрация
-- подтверждение регистрации через код
-- вход в систему
-- восстановление пароля
-- смена пароля
-- профиль пользователя
-
-Вход возможен через:
-
-- username
-- email
-- phone number
-
-Код подтверждения отправляется на email.
-
----
-
-## Проекты
-
-Клиенты могут:
-
-- создавать проекты
-- редактировать проекты
-- отменять проекты
-- завершать проекты
-- просматривать список своих проектов
-
-Фрилансеры могут:
-
-- просматривать проекты
-- фильтровать проекты
-- отправлять предложения
-
-Каждый проект содержит:
-
-- название
-- описание
-- бюджет
-- дедлайн
-- список требуемых навыков
-- статус
-
-Статусы проекта:
-
-- OPEN
-- IN_PROGRESS
-- COMPLETED
-- CANCELLED
-
----
-
-## Предложения (Bids)
-
-Фрилансеры могут отправлять предложения на проекты.
-
-Предложение содержит:
-
-- цену
-- описание предложения
-- срок выполнения
-
-Клиент может выбрать предложение и начать работу с фрилансером.
-
-Ограничения:
-
-- нельзя отправить предложение на свой проект
-- нельзя отправлять предложения на закрытые проекты
-
----
-
-## Контракты
-
-Контракт создаётся автоматически после выбора предложения клиентом.
-
-Контракт содержит:
-
-- проект
-- клиента
-- фрилансера
-- цену
-- дату начала
-- статус
-
-Статусы контракта:
-
-- ACTIVE
-- FINISHED
-- CANCELLED
-
-Контракт управляет жизненным циклом проекта.
-
----
-
-## Отзывы
-
-После завершения контракта клиент может оставить отзыв фрилансеру.
-
-Отзыв содержит:
-
-- рейтинг (1–5)
-- комментарий
-
-Отзывы доступны для просмотра другим пользователям.
-
----
-
-## Чат
-
-После создания контракта автоматически создаётся чат между клиентом и фрилансером.
-
-Возможности:
-
-- отправка сообщений
-- отправка изображений
-- просмотр истории сообщений
-- отображение времени сообщения
-
-Чат доступен только участникам контракта.
-
----
-
-## Поиск и фильтрация проектов
-
-Фрилансеры могут:
-
-- искать проекты по названию
-- фильтровать проекты по бюджету
-- фильтровать по навыкам
-- фильтровать по статусу
-
----
-
-## Интернационализация
-
-Проект поддерживает три языка:
-
-- русский
-- узбекский
-- английский
-
-Все текстовые элементы интерфейса используют систему переводов Django.
-
----
-
-## Используемые технологии
+## Технологии
 
 - Python
 - Django
+- Django Rest Framework
 - PostgreSQL
-- Bootstrap (frontend templates)
-- Django Template Language
+- JWT Authentication
+- django-filter
+- drf-spectacular
 
----
+## Роли пользователей
 
-## Структура проекта
+### Client
 
-Основные приложения:
+- создаёт проекты
+- видит bids на свои проекты
+- выбирает bid
+- завершает контракт
+- оставляет отзыв
 
-- accounts — управление пользователями
-- projects — управление проектами
-- bids — предложения фрилансеров
-- contracts — контракты
-- reviews — отзывы
-- chat — чат между пользователями
-- core — общая инфраструктура проекта
+### Freelancer
 
----
+- смотрит открытые проекты
+- отправляет bid
+- видит свои контракты
+- участвует в чате по контракту
 
-## Дополнительные функции (сверх требований ТЗ)
+## Основные сущности
 
-В проект были добавлены дополнительные функции, которые не требовались в базовом техническом задании:
+- `User`
+- `Project`
+- `Bid`
+- `Contract`
+- `Review`
+- `Conversation`
+- `Message`
 
-### Система чатов
+## Бизнес-логика
 
-После создания контракта автоматически создаётся чат между клиентом и фрилансером.
+- только `client` может создавать project
+- только `freelancer` может отправлять bid
+- один freelancer может отправить только один bid на один project
+- client может видеть bids только на свои проекты
+- client может выбрать только один bid
+- выбранный bid получает статус `accepted`
+- остальные bids получают статус `rejected`
+- после принятия bid создаётся `contract`
+- client может завершить только свой активный contract
+- review можно оставить только после завершения contract
+- rating review должен быть от 1 до 5
+
+## Аутентификация
+
+Проект использует JWT authentication.
+
+После логина пользователь получает:
+
+- `access` token
+- `refresh` token
+
+Защищённые endpoints требуют заголовок:
+
+```http
+Authorization: Bearer <access_token>
+```
+
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Описание |
+|---|---|---|
+| POST | `/api/accounts/signup/` | Регистрация пользователя |
+| POST | `/api/accounts/verify-signup-code/` | Подтверждение регистрации кодом |
+| POST | `/api/accounts/login/` | Вход пользователя |
+| POST | `/api/accounts/logout/` | Выход пользователя |
+| GET | `/api/accounts/me/` | Профиль текущего пользователя |
+| PATCH | `/api/accounts/me/` | Обновление профиля текущего пользователя |
+| GET | `/api/accounts/freelancers/{id}/` | Публичный профиль фрилансера |
+| POST | `/api/accounts/password/reset/request/` | Запрос на сброс пароля |
+| POST | `/api/accounts/password/reset/confirm/` | Подтверждение сброса пароля |
+| POST | `/api/accounts/password/change/` | Смена пароля |
+| POST | `/api/token/` | Получение JWT токенов |
+| POST | `/api/token/refresh/` | Обновление access token |
+| POST | `/api/token/verify/` | Проверка токена |
+
+### Projects
+
+| Method | Endpoint | Описание |
+|---|---|---|
+| GET | `/api/projects/` | Список проектов |
+| POST | `/api/projects/` | Создание проекта |
+| GET | `/api/projects/{id}/` | Детали проекта |
 
 Поддерживается:
 
-- отправка текстовых сообщений
-- отправка изображений
-- отображение истории сообщений
+- pagination
+- search по `title`
+- filter по `status`
+- filter по `min_budget`
+- filter по `max_budget`
+- ordering по `created_at`, `budget`, `deadline`
 
----
+### Bids
 
-### Расширенная система верификации
+| Method | Endpoint | Описание |
+|---|---|---|
+| GET | `/api/bids/` | Список bids пользователя |
+| POST | `/api/bids/` | Отправка bid |
+| GET | `/api/bids/{id}/` | Детали bid |
+| GET | `/api/bids/project/{project_id}/` | Bids по конкретному project для владельца |
+| POST | `/api/bids/{id}/accept/` | Принятие bid клиентом |
 
-Регистрация, восстановление пароля и подтверждение аккаунта используют систему кодов подтверждения.
+### Contracts
 
-В системе реализованы:
+| Method | Endpoint | Описание |
+|---|---|---|
+| GET | `/api/contracts/` | Список контрактов |
+| GET | `/api/contracts/{id}/` | Детали контракта |
+| POST | `/api/contracts/{id}/finish/` | Завершение контракта |
 
-- срок действия кода
-- статус использования кода
-- ограничение количества попыток ввода
-- возможность повторной отправки кода
+Контракт создаётся автоматически при принятии bid.
 
----
+### Reviews
 
-### Сервисный слой (Services)
+| Method | Endpoint | Описание |
+|---|---|---|
+| GET | `/api/reviews/` | Список отзывов |
+| POST | `/api/reviews/` | Создание review |
+| GET | `/api/reviews/{id}/` | Детали review |
 
-Бизнес-логика вынесена из views в отдельный сервисный слой.
+### Chat
 
-Примеры:
+| Method | Endpoint | Описание |
+|---|---|---|
+| GET | `/api/chat/conversations/` | Список чатов пользователя |
+| GET | `/api/chat/conversations/{id}/` | Детали чата |
+| GET | `/api/chat/conversations/{id}/messages/` | Список сообщений |
+| POST | `/api/chat/conversations/{id}/messages/` | Отправка сообщения |
 
-- accounts/services.py
-- projects/services.py
-- bids/services.py
-- contracts/services.py
-- reviews/services.py
-- chat/services.py
+## Примеры API сценариев
 
-Это делает код:
+### Создание проекта
 
-- более чистым
-- легче тестируемым
-- проще поддерживаемым
+```http
+POST /api/projects/
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
 
----
+```json
+{
+  "title": "Build DRF backend",
+  "description": "Need a Django REST API for freelance marketplace with auth and contracts.",
+  "budget": "1500.00",
+  "deadline": "2026-03-30",
+  "skills_required": "django, drf, postgresql"
+}
+```
 
-### Поиск и фильтрация проектов
+### Отправка bid
 
-Добавлена расширенная фильтрация проектов:
+```http
+POST /api/bids/
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
 
-- поиск по названию
-- фильтрация по бюджету
-- фильтрация по навыкам
-- фильтрация по статусу
+```json
+{
+  "project_id": 1,
+  "proposal": "I can deliver this project within 7 days with full API documentation.",
+  "price": "1200.00",
+  "delivery_time_days": 7
+}
+```
 
----
+### Создание review
 
-### Улучшенная валидация данных
+```http
+POST /api/reviews/
+Authorization: Bearer <access_token>
+Content-Type: application/json
+```
 
-В моделях реализована дополнительная бизнес-валидация:
+```json
+{
+  "contract_id": 2,
+  "rating": 5,
+  "comment": "Great work, delivered on time and communication was clear."
+}
+```
 
-- запрет отправки предложения на свой проект
-- запрет создания отзывов до завершения контракта
-- запрет общения в чате после отмены контракта
-- проверка целостности данных между моделями
-
----
-
-## Установка проекта
+## Installation
 
 ### 1. Клонировать репозиторий
 
 ```bash
 git clone https://github.com/v207vv-max/min-upwork.git
+cd min-upwork
 ```
-
----
 
 ### 2. Создать виртуальное окружение
 
@@ -275,9 +222,7 @@ git clone https://github.com/v207vv-max/min-upwork.git
 python -m venv venv
 ```
 
----
-
-### 3. Активировать окружение
+### 3. Активировать виртуальное окружение
 
 Windows:
 
@@ -285,13 +230,11 @@ Windows:
 venv\Scripts\activate
 ```
 
-Linux / Mac:
+Linux / macOS:
 
 ```bash
 source venv/bin/activate
 ```
-
----
 
 ### 4. Установить зависимости
 
@@ -299,29 +242,27 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
----
-
-### 5. Настроить файл .env
+### 5. Создать `.env`
 
 Пример:
 
 ```env
-SECRET_KEY=your_secret_key
+SECRET_KEY=django-insecure-local-dev-key
+DEBUG=True
 
-DB_NAME=freelance_marketplace_db
+DB_NAME=min_upwork
 DB_USER=postgres
-DB_PASSWORD=your_password
+DB_PASSWORD=postgres
 DB_HOST=localhost
 DB_PORT=5432
 
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
-EMAIL_HOST_USER=your_email@gmail.com
-EMAIL_HOST_PASSWORD=your_app_password
+EMAIL_HOST_USER=dev@example.com
+EMAIL_HOST_PASSWORD=dev-password
 EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL=dev@example.com
 ```
-
----
 
 ### 6. Применить миграции
 
@@ -329,15 +270,11 @@ EMAIL_USE_TLS=True
 python manage.py migrate
 ```
 
----
-
 ### 7. Создать суперпользователя
 
 ```bash
 python manage.py createsuperuser
 ```
-
----
 
 ### 8. Запустить сервер
 
@@ -345,8 +282,133 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
----
+## API Documentation
 
-## Автор
+Swagger UI:
 
-Проект разработан в рамках учебного задания по backend разработке на Django.
+```text
+/api/docs/
+```
+
+OpenAPI schema:
+
+```text
+/api/schema/
+```
+
+## Фильтрация и поиск
+
+### Projects
+
+Примеры:
+
+```text
+/api/projects/?search=django
+/api/projects/?min_budget=500&max_budget=2000
+/api/projects/?status=open
+/api/projects/?ordering=-budget
+```
+
+### Bids
+
+```text
+/api/bids/?status=pending
+/api/bids/?project=1
+```
+
+### Contracts
+
+```text
+/api/contracts/?status=active
+```
+
+### Reviews
+
+```text
+/api/reviews/?rating=5
+```
+
+## Test users
+
+Для локальной проверки можно использовать:
+
+- `client1 / client123`
+- `freelancer1 / freelancer123`
+
+Если эти пользователи ещё не созданы в базе, создай их вручную через API или через Django shell.
+
+## Структура проекта
+
+```text
+accounts/
+    models.py
+    serializers.py
+    services.py
+    urls.py
+    views.py
+
+projects/
+    models.py
+    serializers.py
+    filters.py
+    services.py
+    urls.py
+    views.py
+
+bids/
+    models.py
+    serializers.py
+    filters.py
+    services.py
+    urls.py
+    views.py
+
+contracts/
+    models.py
+    serializers.py
+    filters.py
+    services.py
+    urls.py
+    views.py
+
+reviews/
+    models.py
+    serializers.py
+    filters.py
+    services.py
+    urls.py
+    views.py
+
+chat/
+    models.py
+    serializers.py
+    services.py
+    urls.py
+    views.py
+
+core/
+    pagination.py
+    permissions.py
+
+config/
+    settings.py
+    urls.py
+```
+
+## Используемые библиотеки
+
+- `Django`
+- `djangorestframework`
+- `djangorestframework-simplejwt`
+- `django-filter`
+- `drf-spectacular`
+- `psycopg2-binary`
+- `python-decouple`
+- `Pillow`
+
+## Примечания
+
+- Все основные endpoints работают через DRF.
+- Все ответы API возвращаются в JSON.
+- Валидация входных данных выполняется через serializers.
+- Swagger доступен для быстрого тестирования API.
