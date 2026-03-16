@@ -340,8 +340,8 @@ postman/8-imtihon.postman_collection.json
 
 Для локальной проверки можно использовать:
 
-- `client1 / client123`
-- `freelancer1 / freelancer123`
+- `client1 / test33333+`
+- `freelancer1 / test33333+`
 
 Если эти пользователи ещё не созданы в базе, создай их вручную через API или через Django shell.
 
