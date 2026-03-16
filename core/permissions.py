@@ -38,11 +38,11 @@ class ProjectPermission(BasePermission):
     def has_permission(self, request, view):
         user = request.user
 
-        if not user or not user.is_authenticated:
-            return False
-
         if request.method in SAFE_METHODS:
             return True
+
+        if not user or not user.is_authenticated:
+            return False
 
         if request.method == "POST":
             return getattr(user, "role", None) == "client"
@@ -53,7 +53,15 @@ class ProjectPermission(BasePermission):
         user = request.user
 
         if request.method in SAFE_METHODS:
-            return True
+            return bool(
+                getattr(obj, "status", None) == "open"
+                and getattr(obj, "is_active", False)
+            ) or bool(
+                user
+                and user.is_authenticated
+                and getattr(user, "role", None) == "client"
+                and obj.client_id == user.id
+            )
 
         return bool(
             user
@@ -76,14 +84,21 @@ class BidPermission(BasePermission):
 
     def has_permission(self, request, view):
         user = request.user
+        action = getattr(view, "action", None)
 
         if not user or not user.is_authenticated:
             return False
 
-        if request.method == "POST":
-            return getattr(user, "role", None) == "freelancer"
+        if action == "accept":
+            return getattr(user, "is_client", False)
 
-        return True
+        if request.method == "POST":
+            return getattr(user, "is_freelancer", False)
+
+        return bool(
+            getattr(user, "is_freelancer", False)
+            or getattr(user, "is_client", False)
+        )
 
     def has_object_permission(self, request, view, obj):
         user = request.user
@@ -91,13 +106,13 @@ class BidPermission(BasePermission):
 
         if action in {"accept", "reject"}:
             return bool(
-                getattr(user, "role", None) == "client"
+                getattr(user, "is_client", False)
                 and obj.project.client_id == user.id
             )
 
         if action in {"update", "partial_update", "withdraw"}:
             return bool(
-                getattr(user, "role", None) == "freelancer"
+                getattr(user, "is_freelancer", False)
                 and obj.freelancer_id == user.id
             )
 

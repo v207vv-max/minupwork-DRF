@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
@@ -8,6 +9,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 urlpatterns = [
+    path("admin/", admin.site.urls),
     path("api/accounts/", include("accounts.urls")),
     path("api/chat/", include("chat.urls")),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),

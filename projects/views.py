@@ -1,10 +1,10 @@
 from decimal import Decimal, InvalidOperation
 
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.db.models import Q
 from rest_framework import mixins, status, viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -28,7 +28,7 @@ class ProjectViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, ProjectPermission]
+    permission_classes = [ProjectPermission]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProjectFilter
     search_fields = ["title"]
@@ -38,13 +38,14 @@ class ProjectViewSet(
     def get_queryset(self):
         user = self.request.user
         queryset = Project.objects.select_related("client").all()
+        public_filter = Q(status=ProjectStatus.OPEN, is_active=True)
 
-        if getattr(user, "role", None) == "freelancer":
-            queryset = queryset.filter(
-                status=ProjectStatus.OPEN,
-                is_active=True,
-            )
-        elif getattr(user, "role", None) == "client":
+        if self.action in {"list", "retrieve"}:
+            if getattr(user, "is_authenticated", False) and getattr(user, "is_client", False):
+                queryset = queryset.filter(public_filter | Q(client=user)).distinct()
+            else:
+                queryset = queryset.filter(public_filter)
+        elif getattr(user, "is_client", False):
             queryset = queryset.filter(client=user)
         else:
             queryset = queryset.none()
